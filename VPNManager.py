@@ -21,7 +21,7 @@ class Rete:
 
 def connect(n):
     name = networks_list[n]
-    os.system(networks[name].start_cmd)
+    os.system(networks[name].start_cmd + " " + path)
     lock = open(networks[name].lock, 'w+')
     lock.close()
 
