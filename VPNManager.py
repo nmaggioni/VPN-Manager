@@ -22,9 +22,7 @@ class Rete:
 
 def connect(n):
     name = networks_list[n]
-    # os.system(networks[name].start_cmd + " " + path)
-    command = list(networks[name].start_cmd.split(' '))
-    command.append(path)
+    command = list(networks[name].start_cmd.replace('#PATH#', path).split(' '))
     call(command)
     lock = open(networks[name].lock, 'w+')
     lock.close()
@@ -32,8 +30,7 @@ def connect(n):
 
 def disconnect(n):
     name = networks_list[n]
-    command = list(networks[name].stop_cmd.split(' '))
-    command.append(path)
+    command = list(networks[name].stop_cmd.replace('#PATH#', path).split(' '))
     call(command)
     lock = networks[name].lock
     if os.path.isfile(lock):
