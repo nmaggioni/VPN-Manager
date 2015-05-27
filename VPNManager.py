@@ -9,14 +9,14 @@ __version__ = "2.0.0"
 
 networks = {}
 path = os.path.dirname(__file__)
-lock_custom = False
 
 
 class Rete:
-    def __init__(self, name, start_cmd, stop_cmd, lock):
+    def __init__(self, name, start_cmd, stop_cmd, lock_custom, lock):
         self.name = name
         self.start_cmd = start_cmd
         self.stop_cmd = stop_cmd
+        self.lock_custom = lock_custom
         self.lock = lock
 
 
@@ -24,7 +24,7 @@ def connect(n):
     name = networks_list[n]
     command = networks[name].start_cmd.replace('#PATH#', path)
     os.system(command)
-    if lock_custom:
+    if networks[name].lock_custom:
         lock = open(networks[name].lock, 'w+')
         lock.close()
 
@@ -34,7 +34,7 @@ def disconnect(n):
     command = networks[name].stop_cmd.replace('#PATH#', path)
     os.system(command)
     lock = networks[name].lock
-    if lock_custom:
+    if networks[name].lock_custom:
         if os.path.isfile(lock):
             os.remove(lock)
 
@@ -81,8 +81,8 @@ def parse_confs():
     confs = glob.glob(path + '/*.conf')
     for conf in confs:
         with open(conf) as file:
-            global lock_custom
             for line in file:
+                global tmp_lock_custom
                 if line.startswith("NAME"):
                     tmp_name = line.split('=')[1].replace('\n', '')
                 elif line.startswith("START"):
@@ -90,10 +90,10 @@ def parse_confs():
                 elif line.startswith("STOP"):
                     tmp_stop_cmd = line.split('=')[1].replace('\n', '')
                 elif line.startswith("LOCK"):
-                    lock_custom = True
+                    tmp_lock_custom = True
                     tmp_lock = line.split('=')[1].replace('\n', '')
                 elif line.startswith("SYSLOCK"):
-                    lock_custom = False
+                    tmp_lock_custom = False
                     tmp_lock = line.split('=')[1].replace('\n', '')
 
         try:
@@ -113,7 +113,7 @@ def parse_confs():
         except NameError:
             raise KeyError("Unable to find the LOCK or the SYSLOCK key in the configuration file: " + conf)
 
-        tmp_class = Rete(tmp_name, tmp_start_cmd, tmp_stop_cmd, tmp_lock)
+        tmp_class = Rete(tmp_name, tmp_start_cmd, tmp_stop_cmd, tmp_lock_custom, tmp_lock)
         networks[tmp_name] = tmp_class
 
 
