@@ -40,12 +40,16 @@ def disconnect(n):
 
 
 def ask(n):
-    print("")
-    choice_input = input("Connect or Disconnect? [C/D]: ")
+    choice_input = input("\nConnect or Disconnect? [C/D]: ")
     if choice_input == "C" or choice_input == "c":
         connect(n - 1)
     elif choice_input == "D" or choice_input == "d":
         disconnect(n - 1)
+    elif choice == "e" or choice == "E" or choice == "q" or choice == "Q":
+        raise SystemExit
+    else:
+        print("Please enter a valid choice.")
+        ask(n)
 
 
 def choose():
