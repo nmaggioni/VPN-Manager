@@ -96,25 +96,25 @@ def parse_confs():
                     lock_custom = False
                     tmp_lock = line.split('=')[1].replace('\n', '')
 
-            try:
-                tmp_name
-            except NameError:
-                raise KeyError("Unable to find the NAME key in the configuration file: " + conf)
-            try:
-                tmp_start_cmd
-            except NameError:
-                raise KeyError("Unable to find the START key in the configuration file: " + conf)
-            try:
-                tmp_stop_cmd
-            except NameError:
-                raise KeyError("Unable to find the STOP key in the configuration file: " + conf)
-            try:
-                tmp_lock
-            except NameError:
-                raise KeyError("Unable to find the LOCK or the SYSLOCK key in the configuration file: " + conf)
+        try:
+            tmp_name
+        except NameError:
+            raise KeyError("Unable to find the NAME key in the configuration file: " + conf)
+        try:
+            tmp_start_cmd
+        except NameError:
+            raise KeyError("Unable to find the START key in the configuration file: " + conf)
+        try:
+            tmp_stop_cmd
+        except NameError:
+            raise KeyError("Unable to find the STOP key in the configuration file: " + conf)
+        try:
+            tmp_lock
+        except NameError:
+            raise KeyError("Unable to find the LOCK or the SYSLOCK key in the configuration file: " + conf)
 
-            tmp_class = Rete(tmp_name, tmp_start_cmd, tmp_stop_cmd, tmp_lock)
-            networks[tmp_name] = tmp_class
+        tmp_class = Rete(tmp_name, tmp_start_cmd, tmp_stop_cmd, tmp_lock)
+        networks[tmp_name] = tmp_class
 
 
 print("""
