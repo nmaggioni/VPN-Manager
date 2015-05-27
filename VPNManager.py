@@ -31,7 +31,7 @@ def connect(n):
 
 def disconnect(n):
     name = networks_list[n]
-    command = networks[name].start_cmd.replace('#PATH#', path)
+    command = networks[name].stop_cmd.replace('#PATH#', path)
     os.system(command)
     lock = networks[name].lock
     if lock_custom:
