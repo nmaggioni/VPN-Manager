@@ -26,7 +26,7 @@ def connect(n):
     lock.close()
 
 
-def dsconnect(n):
+def disconnect(n):
     name = networks_list[n]
     os.system(networks[name].stop_cmd)
     lock = networks[name].lock
@@ -40,7 +40,7 @@ def ask(n):
     if choice_input == "C" or choice_input == "c":
         connect(n - 1)
     elif choice_input == "D" or choice_input == "d":
-        dsconnect(n - 1)
+        disconnect(n - 1)
 
 
 def choose():
@@ -97,7 +97,7 @@ def parse_confs():
             try:
                 tmp_stop_cmd
             except NameError:
-                raise KeyError("IUnable to find the STOP key in the configuration file: " + conf)
+                raise KeyError("Unable to find the STOP key in the configuration file: " + conf)
             try:
                 tmp_lock
             except NameError:
@@ -127,7 +127,7 @@ try:
     choose()
     while True:
         if choice not in [n for n in range(1, len(networks) + 1)]:
-            print("Il numero inserito non corrisponde a nessuna rete.\n")
+            print("The number you entered does not match any network.\n")
             choose()
         else:
             break
