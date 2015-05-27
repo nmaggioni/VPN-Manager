@@ -81,6 +81,7 @@ def parse_confs():
     confs = glob.glob(path + '/*.conf')
     for conf in confs:
         with open(conf) as file:
+            global lock_custom
             for line in file:
                 if line.startswith("NAME"):
                     tmp_name = line.split('=')[1].replace('\n', '')
@@ -89,11 +90,9 @@ def parse_confs():
                 elif line.startswith("STOP"):
                     tmp_stop_cmd = line.split('=')[1].replace('\n', '')
                 elif line.startswith("LOCK"):
-                    global lock_custom
                     lock_custom = True
                     tmp_lock = line.split('=')[1].replace('\n', '')
                 elif line.startswith("SYSLOCK"):
-                    global lock_custom
                     lock_custom = False
                     tmp_lock = line.split('=')[1].replace('\n', '')
 
