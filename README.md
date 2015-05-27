@@ -12,7 +12,7 @@ When connecting a _lockfile_ will be created, so that when you run the script ag
 Configuration files
 -------------------
 The configuration files __must__ end with the `.conf` extension.
-They __must__ also contain _at least_ the following lines:
+They __must__ also contain _at least_ the following lines (the lines must __start__ with the these words, anything else will be considered a comment):
 
 `NAME`: the display name of the VPN in the main menu.
 
@@ -20,6 +20,10 @@ They __must__ also contain _at least_ the following lines:
 
 `STOP`: the shell command to be executed when you choose to disconnect from the VPN. __Note: when parsing the command, the word `#PATH#` will be replaced with the script's folder path (in the format `/home/myuser/bin`, for example).__
 
-`LOCK`: the path to the lockfile (inluding the file itself). _I suggest to place it in_ `/tmp`_, so that if the machine is rebooted no false flags will be detected._
+You must also include __one__ of the following:
+
+`LOCK`: the path to the custom lockfile (inluding the file itself). _I suggest to place it in_ `/tmp`_, so that if the machine is rebooted no false flags will be detected._
+
+`SYSLOCK`: the path to the system's lockfile or pidfile of the program used (usually found in `/var/run` or just `/run`). __Note: this file won't be programmatically created, the script will just check for it's existence at run rime.__
 
 For an example please refer to the [example configuration file](example.conf).

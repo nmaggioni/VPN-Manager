@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import os
 import glob
-from subprocess import call
 
 __author__ = "Niccolò Maggioni"
 __copyright__ = "Copyright 2015, Niccolò Maggioni"
@@ -10,6 +9,7 @@ __version__ = "2.0.0"
 
 networks = {}
 path = os.path.dirname(__file__)
+lock_custom = False
 
 
 class Rete:
@@ -22,19 +22,21 @@ class Rete:
 
 def connect(n):
     name = networks_list[n]
-    command = list(networks[name].start_cmd.replace('#PATH#', path).split(' '))
-    call(command)
-    lock = open(networks[name].lock, 'w+')
-    lock.close()
+    command = networks[name].start_cmd.replace('#PATH#', path)
+    os.system(command)
+    if lock_custom:
+        lock = open(networks[name].lock, 'w+')
+        lock.close()
 
 
 def disconnect(n):
     name = networks_list[n]
-    command = list(networks[name].stop_cmd.replace('#PATH#', path).split(' '))
-    call(command)
+    command = networks[name].start_cmd.replace('#PATH#', path)
+    os.system(command)
     lock = networks[name].lock
-    if os.path.isfile(lock):
-        os.remove(lock)
+    if lock_custom:
+        if os.path.isfile(lock):
+            os.remove(lock)
 
 
 def ask(n):
@@ -87,6 +89,12 @@ def parse_confs():
                 elif line.startswith("STOP"):
                     tmp_stop_cmd = line.split('=')[1].replace('\n', '')
                 elif line.startswith("LOCK"):
+                    global lock_custom
+                    lock_custom = True
+                    tmp_lock = line.split('=')[1].replace('\n', '')
+                elif line.startswith("SYSLOCK"):
+                    global lock_custom
+                    lock_custom = False
                     tmp_lock = line.split('=')[1].replace('\n', '')
 
             try:
@@ -104,7 +112,7 @@ def parse_confs():
             try:
                 tmp_lock
             except NameError:
-                raise KeyError("Unable to find the LOCK key in the configuration file: " + conf)
+                raise KeyError("Unable to find the LOCK or the SYSLOCK key in the configuration file: " + conf)
 
             tmp_class = Rete(tmp_name, tmp_start_cmd, tmp_stop_cmd, tmp_lock)
             networks[tmp_name] = tmp_class
