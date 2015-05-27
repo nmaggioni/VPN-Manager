@@ -16,7 +16,7 @@ They __must__ also contain _at least_ the following lines:
 
 `NAME`: the display name of the VPN in the main menu.
 
-`START`: the shell command to be executed when you choose to connect to the VPN.
+`START`: the shell command to be executed when you choose to connect to the VPN. __Note: the script's folder path (in the format `/home/myuser/bin`, for example) is passed to the command as the last parameter.__
 
 `STOP`: the shell command to be executed when you choose to disconnect from the VPN.
 
