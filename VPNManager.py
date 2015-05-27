@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import glob
+from subprocess import call
 
 __author__ = "Niccolò Maggioni"
 __copyright__ = "Copyright 2015, Niccolò Maggioni"
@@ -21,14 +22,19 @@ class Rete:
 
 def connect(n):
     name = networks_list[n]
-    os.system(networks[name].start_cmd + " " + path)
+    # os.system(networks[name].start_cmd + " " + path)
+    command = list(networks[name].start_cmd.split(' '))
+    command.append(path)
+    call(command)
     lock = open(networks[name].lock, 'w+')
     lock.close()
 
 
 def disconnect(n):
     name = networks_list[n]
-    os.system(networks[name].stop_cmd)
+    command = list(networks[name].stop_cmd.split(' '))
+    command.append(path)
+    call(command)
     lock = networks[name].lock
     if os.path.isfile(lock):
         os.remove(lock)
