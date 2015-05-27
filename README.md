@@ -18,7 +18,7 @@ They __must__ also contain _at least_ the following lines:
 
 `START`: the shell command to be executed when you choose to connect to the VPN. __Note: the script's folder path (in the format `/home/myuser/bin`, for example) is passed to the command as the last parameter.__
 
-`STOP`: the shell command to be executed when you choose to disconnect from the VPN.
+`STOP`: the shell command to be executed when you choose to disconnect from the VPN. __Note: the script's folder path (in the format `/home/myuser/bin`, for example) is passed to the command as the last parameter.__
 
 `LOCK`: the path to the lockfile (inluding the file itself). _I suggest to place it in_ `/tmp`_, so that if the machine is rebooted no false flags will be detected._
 
