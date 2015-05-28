@@ -74,6 +74,7 @@ def print_running(el, running):
 def print_list():
     global networks_list
     networks_list = list(networks)
+    networks_list.sort()
     for el in networks_list:
         if os.path.isfile(networks[el].lock):
             print_running(el, True)
