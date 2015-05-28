@@ -22,7 +22,7 @@ class Rete:
 
 def connect(n):
     name = networks_list[n]
-    command = networks[name].start_cmd.replace('#PATH#', path)
+    command = networks[name].start_cmd.replace('#PATH#', path).replace('#CONF#', conf_dir)
     os.system(command)
     if networks[name].lock_custom:
         lock = open(networks[name].lock, 'w+')
@@ -31,7 +31,7 @@ def connect(n):
 
 def disconnect(n):
     name = networks_list[n]
-    command = networks[name].stop_cmd.replace('#PATH#', path)
+    command = networks[name].stop_cmd.replace('#PATH#', path).replace('#CONF#', conf_dir)
     os.system(command)
     lock = networks[name].lock
     if networks[name].lock_custom:
@@ -81,8 +81,24 @@ def print_list():
             print_running(el, False)
 
 
+def parse_conf():
+    conf = path + '/vpnmanager.conf'
+    if not os.path.isfile(conf):
+        raise FileNotFoundError("Unable to find the main configuration file: " + conf)
+    with open(conf) as file:
+        global conf_dir
+        for line in file:
+            if line.startswith("CONF_DIR"):
+                conf_dir = line.split('=')[1].replace('\n', '').replace('#PATH#', path)
+    try:
+        conf_dir
+    except NameError:
+        raise KeyError("Unable to find the CONF_DIR key in the main configuration file: " + conf)
+    parse_confs()
+
+
 def parse_confs():
-    confs = glob.glob(path + '/*.conf')
+    confs = glob.glob(conf_dir + '/*.conf')
     for conf in confs:
         with open(conf) as file:
             for line in file:
@@ -122,19 +138,19 @@ def parse_confs():
 
 
 print("""
-        (       )     *                                    
-        )\ ) ( /(   (  `                                   
- (   ( (()/( )\())  )\))(     )          ) (  (    (  (    
- )\  )\ /(_)|(_)\  ((_)()\ ( /(  (    ( /( )\))(  ))\ )(   
-((_)((_|_))  _((_) (_()((_))(_)) )\ ) )(_)|(_))\ /((_|()\  
-\ \ / /| _ \| \| | |  \/  ((_)_ _(_/(((_)_ (()(_|_))  ((_) 
- \ V / |  _/| .` | | |\/| / _` | ' \)) _` / _` |/ -_)| '_| 
-  \_/  |_|  |_|\_| |_|  |_\__,_|_||_|\__,_\__, |\___||_|   
+        (       )     *
+        )\ ) ( /(   (  `
+ (   ( (()/( )\())  )\))(     )          ) (  (    (  (
+ )\  )\ /(_)|(_)\  ((_)()\ ( /(  (    ( /( )\))(  ))\ )(
+((_)((_|_))  _((_) (_()((_))(_)) )\ ) )(_)|(_))\ /((_|()
+\ \ / /| _ \| \| | |  \/  ((_)_ _(_/(((_)_ (()(_|_))  ((_)
+ \ V / |  _/| .` | | |\/| / _` | ' \)) _` / _` |/ -_)| '_|
+  \_/  |_|  |_|\_| |_|  |_\__,_|_||_|\__,_\__, |\___||_|
                                           |___/      v""" + __version__ + "\n")
 
 print("Available networks:                            {Q|E} to exit")
 print("===================                            =============")
-parse_confs()
+parse_conf()
 print_list()
 print("")
 try:
